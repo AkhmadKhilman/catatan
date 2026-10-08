@@ -1,0 +1,1 @@
+- Marketing 4P Planning, Price, Promotion, Place
