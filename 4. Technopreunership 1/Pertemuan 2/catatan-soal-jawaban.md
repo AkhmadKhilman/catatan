@@ -1,3 +1,7 @@
+# CATATAN
+
+**Marketing 4P Planning, Price, Promotion, Place**
+
 # SOAL
 
 **Buatlah sebuah contoh menetukan harga sebuah produk didalamnya ada hpp, beban, dan margin?**
