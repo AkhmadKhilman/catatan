@@ -1,7 +1,5 @@
 # MATERI TAMBAHAN SLIDE PRESENTASI: STUDI KASUS NAIVE BAYES
 
-_(Panduan untuk dimasukkan ke Slide 5, Slide 6, Slide 7, dan Slide 8)_
-
 ---
 
 ### Basis Pengetahuan (Knowledge Base) Klinik
