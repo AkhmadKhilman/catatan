@@ -4,8 +4,6 @@ _(Panduan untuk dimasukkan ke Slide 5, Slide 6, Slide 7, dan Slide 8)_
 
 ---
 
-## SLIDE 5: SOAL 1 (Data Knowledge Base Sistem Pakar)
-
 ### Basis Pengetahuan (Knowledge Base) Klinik
 
 Sebuah Sistem Pakar memiliki data rekam medis untuk **4 penyakit** beserta nilai Probabilitas Awal $P(H)$ dan 3 Gejala Utama $P(E|H)$ sebagai berikut:
@@ -21,8 +19,6 @@ Sebuah Sistem Pakar memiliki data rekam medis untuk **4 penyakit** beserta nilai
 > Apabila pasien mengeluhkan gejala yang **tidak terdaftar (bernilai 0)** pada penyakit yang sedang diuji, maka gejala tersebut otomatis diberi **nilai bantuan terkecil sebesar 0,25** agar perhitungan perkalian tidak menghasilkan angka 0.
 
 ---
-
-## SLIDE 6: JAWABAN SOAL 1 (Kasus Pasien & Penyaringan Kandidat)
 
 ### Studi Kasus Pasien
 
@@ -50,8 +46,6 @@ Seorang pasien datang ke klinik dan mengeluhkan **5 gejala** sekaligus:
 
 ---
 
-## SLIDE 7: SOAL 2 (Perhitungan Probabilitas Tiap Kelas)
-
 ### Tahap 2: Menghitung Nilai $P(E|H) \times P(H)$ untuk Setiap Kelas
 
 Sistem mengalikan nilai peluang ke-5 gejala pasien dengan peluang awal masing-masing penyakit:
@@ -71,8 +65,6 @@ $$P(E) = \text{Skor Flu} + \text{Skor DBD}$$
 $$P(E) = 0,007 + 0,002 = \mathbf{0,009}$$
 
 ---
-
-## SLIDE 8: JAWABAN SOAL 2 (Persentase Akhir & Keputusan Pakar)
 
 ### Tahap 3: Normalisasi Persentase & Penentuan Kelas Tertinggi
 
