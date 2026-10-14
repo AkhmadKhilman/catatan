@@ -71,10 +71,10 @@ Membagi skor masing-masing kandidat penyakit dengan nilai total $P(E)$ menggunak
 $$P(H|E) = \frac{P(E|H) \times P(H)}{P(E)}$$
 
 - **Persentase Akhir Penyakit Flu ($P(H_1|E)$):**
-  $$P(H_1|E) = \frac{0,007}{0,009} = 0,778 \rightarrow \mathbf{77,8\%}$$
+  $$P(H_1|E) = \frac{0,007}{0,009} = 0,778 \rightarrow 77,8%$$
 
 - **Persentase Akhir Penyakit DBD ($P(H_2|E)$):**
-  $$P(H_2|E) = \frac{0,002}{0,009} = 0,222 \rightarrow \mathbf{22,2\%}$$
+  $$P(H_2|E) = \frac{0,002}{0,009} = 0,222 \rightarrow 22,2%$$
 
 - **Total Persentase Keseluruhan:**
   $$77,8\% + 22,2\% = \mathbf{100\%}$$
