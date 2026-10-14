@@ -77,7 +77,7 @@ $$P(H|E) = \frac{P(E|H) \times P(H)}{P(E)}$$
   $$P(H_2|E) = \frac{0,002}{0,009} = 0,222 \rightarrow$$ 22,2%
 
 - **Total Persentase Keseluruhan:**
-  $$77,8\% + 22,2\% = \mathbf{100\%}$$
+  77,8\% + 22,2\% = \mathbf{100\%}
 
 ### Keputusan Akhir Sistem Pakar
 
