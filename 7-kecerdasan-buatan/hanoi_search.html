@@ -1,0 +1,579 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pencarian BFS & DFS - Tower of Hanoi V8 (Kompak)</title>
+    <style>
+      :root {
+        --primary: #2e7d32;
+        --bg: #f8fafc;
+        --text: #1e293b;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: var(--bg);
+        color: var(--text);
+      }
+      .container {
+        max-width: 100%;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .controls {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        padding: 15px;
+        background: #e8f5e9;
+        border-radius: 6px;
+      }
+      button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        background: var(--primary);
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.2s;
+        font-size: 15px;
+      }
+      button:hover {
+        background: #1b5e20;
+      }
+
+      /* Tabel */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 30px;
+        font-size: 1em;
+      }
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 12px;
+        text-align: left;
+      }
+      th {
+        background: #f1f5f9;
+      }
+
+      /* Tree Layout Utama */
+      .tree-wrapper {
+        position: relative;
+        overflow-x: auto;
+        padding: 20px 0;
+        background: #fff;
+        scrollbar-width: thin;
+        scrollbar-color: var(--primary) #e2e8f0;
+      }
+      .tree-scale-container {
+        transition: transform 0.3s ease;
+        transform-origin: top center;
+        display: flex;
+        justify-content: center;
+        min-width: max-content;
+        position: relative;
+        padding: 0 20px; /* Jarak batas layar diperkecil */
+      }
+
+      /* Struktur Tree Cabang */
+      .tree {
+        padding-bottom: 20px;
+      }
+      .tree ul {
+        padding-top: 40px;
+        position: relative;
+        transition: all 0.5s;
+        display: flex;
+        justify-content: center;
+        margin: 0;
+        padding-left: 0;
+      }
+      .tree li {
+        float: left;
+        text-align: center;
+        list-style-type: none;
+        position: relative;
+        padding: 40px 4px 0 4px; /* FIX: Jarak antar cabang ke samping di-press (diperkecil maksimal) */
+      }
+
+      /* Garis Konektor */
+      .tree li::before,
+      .tree li::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 50%;
+        border-top: 2px solid var(--primary);
+        width: 50%;
+        height: 40px;
+      }
+      .tree li::after {
+        right: auto;
+        left: 50%;
+        border-left: 2px solid var(--primary);
+      }
+      .tree li:only-child::after,
+      .tree li:only-child::before {
+        display: none;
+      }
+      .tree li:only-child {
+        padding-top: 0;
+      }
+      .tree li:first-child::before,
+      .tree li:last-child::after {
+        border: 0 none;
+      }
+      .tree li:last-child::before {
+        border-right: 2px solid var(--primary);
+        border-radius: 0 5px 0 0;
+      }
+      .tree li:first-child::after {
+        border-radius: 5px 0 0 0;
+      }
+      .tree ul ul::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 50%;
+        border-left: 2px solid var(--primary);
+        width: 0;
+        height: 40px;
+      }
+
+      /* Tampilan Node & State */
+      .node-box {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+      }
+      .circle {
+        width: 55px;
+        height: 55px;
+        border-radius: 50%;
+        border: 3px solid var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        font-weight: bold;
+        z-index: 2;
+        position: relative;
+        font-size: 18px;
+      }
+      .goal-node .circle {
+        background: #4caf50;
+        color: white;
+        border-color: #1b5e20;
+      }
+
+      .state-label {
+        font-size: 15px;
+        margin-top: 8px;
+        font-weight: bold;
+        color: #333;
+        background: #f1f1f1;
+        padding: 2px 6px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+      }
+
+      .level-badge {
+        font-size: 12px;
+        margin-top: 6px;
+        font-weight: bold;
+        color: #0369a1;
+        background: #e0f2fe;
+        padding: 2px 8px;
+        border-radius: 12px;
+        border: 1px solid #7dd3fc;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Label Operator */
+      .edge-label {
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 13px;
+        background: white;
+        color: #b91c1c;
+        padding: 2px 4px;
+        font-weight: bold;
+        border-radius: 3px;
+        z-index: 1;
+        border: 1px solid #fecaca;
+      }
+
+      /* FIX CSS: Memosisikan ulang label Op saat anak cabang vertikal lurus tunggal (DFS) */
+      .tree li:only-child > .edge-label {
+        top: -32px;
+      }
+
+      @page {
+        size: landscape;
+        margin: 10mm;
+      }
+      @media print {
+        body {
+          padding: 0;
+          background: #fff;
+        }
+        .controls {
+          display: none;
+        }
+        .container {
+          box-shadow: none;
+          padding: 0;
+        }
+        .tree-wrapper {
+          overflow: hidden !important;
+          width: 100%;
+          max-width: 100vw;
+        }
+        .tree li {
+          page-break-inside: avoid;
+        }
+        table,
+        tr {
+          page-break-inside: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Kecerdasan Buatan: Searching BFS & DFS</h1>
+      <div class="controls">
+        <button onclick="runSearch('BFS')">Jalankan BFS</button>
+        <button onclick="runSearch('DFS')">
+          Jalankan DFS (True Backtracking)
+        </button>
+        <button onclick="window.print()" style="background: #0284c7">
+          Cetak PDF
+        </button>
+      </div>
+
+      <div id="output" style="display: none">
+        <h2 id="method-title"></h2>
+        <div
+          id="conclusion"
+          style="
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #e0f2fe;
+            border-left: 4px solid #0284c7;
+            font-size: 1.1em;
+          "
+        ></div>
+
+        <h3>Table Queue (Tabel Pelacakan Memory)</h3>
+        <table>
+          <thead>
+            <tr>
+              <th width="15%">Pop / Evaluasi</th>
+              <th width="35%">Push / Hasil Operasi</th>
+              <th width="50%">Queue / Stack (Status Memori)</th>
+            </tr>
+          </thead>
+          <tbody id="queue-tbody"></tbody>
+        </table>
+
+        <h3>Tree Pencarian Visual</h3>
+        <div class="tree-wrapper" id="tree-wrapper">
+          <div class="tree-scale-container" id="tree-scale-container">
+            <div class="tree" id="tree-container"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const OPERATORS = [
+        { id: 1, label: "Op1", from: "A", to: "B" },
+        { id: 2, label: "Op2", from: "A", to: "C" },
+        { id: 3, label: "Op3", from: "B", to: "A" },
+        { id: 4, label: "Op4", from: "B", to: "C" },
+        { id: 5, label: "Op5", from: "C", to: "A" },
+        { id: 6, label: "Op6", from: "C", to: "B" },
+      ];
+
+      let levelCounters = {};
+
+      function getNextNodeName(level) {
+        if (level === 0) return "A";
+        let char = "";
+        let num = level;
+        while (num >= 0) {
+          char = String.fromCharCode((num % 26) + 65) + char;
+          num = Math.floor(num / 26) - 1;
+        }
+        if (!levelCounters[level]) levelCounters[level] = 1;
+        else levelCounters[level]++;
+        return char + levelCounters[level];
+      }
+
+      function getTopDisk(state, peg) {
+        let idx = state.indexOf(peg);
+        return idx !== -1 ? idx : 4;
+      }
+
+      function applyOperator(state, op) {
+        let diskToMove = getTopDisk(state, op.from);
+        if (diskToMove === 4) return null;
+        let targetTopDisk = getTopDisk(state, op.to);
+        if (diskToMove > targetTopDisk) return null;
+
+        let newState = [...state];
+        newState[diskToMove] = op.to;
+        return newState;
+      }
+
+      function runSearch(method) {
+        document.getElementById("output").style.display = "block";
+        document.getElementById("method-title").innerText = `Metode: ${method}`;
+
+        levelCounters = {};
+        let visited = new Set();
+        let tableData = [];
+        let treeNodes = [];
+        let iterasi = 0;
+
+        let initialState = ["A", "A", "A", "A"];
+        let goalState = "C,C,C,C";
+
+        let rootNode = {
+          id: 0,
+          parentId: null,
+          state: initialState,
+          name: getNextNodeName(0),
+          level: 0,
+          opLabel: "",
+        };
+
+        treeNodes.push(rootNode);
+        visited.add(initialState.join(","));
+        let goalNode = null;
+
+        if (initialState.join(",") === goalState) {
+          goalNode = rootNode;
+          renderOutput(method, tableData, treeNodes, goalNode, iterasi);
+          return;
+        }
+
+        if (method === "BFS") {
+          let queue = [rootNode];
+          tableData.push({
+            pop: "-",
+            push: rootNode.name,
+            queue: rootNode.name,
+          });
+
+          while (queue.length > 0) {
+            iterasi++;
+            let current = queue.shift();
+            let children = [];
+            let pushNames = [];
+            let goalFoundNow = false;
+
+            for (let op of OPERATORS) {
+              let newState = applyOperator(current.state, op);
+              if (newState) {
+                let hash = newState.join(",");
+                if (!visited.has(hash)) {
+                  visited.add(hash);
+                  let childNode = {
+                    id: treeNodes.length,
+                    parentId: current.id,
+                    state: newState,
+                    name: getNextNodeName(current.level + 1),
+                    level: current.level + 1,
+                    opLabel: op.label,
+                  };
+                  children.push(childNode);
+                  treeNodes.push(childNode);
+                  queue.push(childNode);
+                  pushNames.push(childNode.name);
+
+                  if (hash === goalState) {
+                    goalNode = childNode;
+                    goalFoundNow = true;
+                    break;
+                  }
+                }
+              }
+            }
+
+            let currentQueueStr =
+              queue.length > 0 ? queue.map((n) => n.name).join(", ") : "-";
+            if (goalFoundNow) {
+              currentQueueStr += ` &nbsp;&nbsp;&larr; <strong style="color: #16a34a;">Goal State Ditemukan! Pencarian Dihentikan.</strong>`;
+            }
+
+            tableData.push({
+              pop: current.name,
+              push: pushNames.length > 0 ? pushNames.join(", ") : "-",
+              queue: currentQueueStr,
+            });
+
+            if (goalFoundNow) break;
+          }
+        } else {
+          let stack = [{ node: rootNode, opIndex: 0 }];
+          tableData.push({
+            pop: "-",
+            push: rootNode.name,
+            queue: rootNode.name,
+          });
+
+          while (stack.length > 0) {
+            iterasi++;
+            let currentItem = stack[stack.length - 1];
+            let current = currentItem.node;
+
+            let childCreated = false;
+            let goalFoundNow = false;
+
+            while (currentItem.opIndex < OPERATORS.length) {
+              let op = OPERATORS[currentItem.opIndex];
+              currentItem.opIndex++;
+
+              let newState = applyOperator(current.state, op);
+              if (newState) {
+                let hash = newState.join(",");
+                if (!visited.has(hash)) {
+                  visited.add(hash);
+                  let childNode = {
+                    id: treeNodes.length,
+                    parentId: current.id,
+                    state: newState,
+                    name: getNextNodeName(current.level + 1),
+                    level: current.level + 1,
+                    opLabel: op.label,
+                  };
+                  treeNodes.push(childNode);
+
+                  stack.push({ node: childNode, opIndex: 0 });
+                  childCreated = true;
+
+                  if (hash === goalState) {
+                    goalNode = childNode;
+                    goalFoundNow = true;
+                  }
+
+                  break;
+                }
+              }
+            }
+
+            if (childCreated) {
+              let newChild = stack[stack.length - 1].node;
+              let queueStr = stack.map((s) => s.node.name).join(", ");
+              if (goalFoundNow) {
+                queueStr += ` &nbsp;&nbsp;&larr; <strong style="color: #16a34a;">Goal State Ditemukan! Pencarian Dihentikan.</strong>`;
+              }
+              tableData.push({
+                pop: current.name,
+                push: newChild.name,
+                queue: queueStr,
+              });
+
+              if (goalFoundNow) break;
+            } else {
+              let poppedItem = stack.pop();
+              tableData.push({
+                pop:
+                  poppedItem.node.name +
+                  " <span style='color:#b91c1c;font-size:0.85em;'>(Mundur/Backtrack)</span>",
+                push: "-",
+                queue:
+                  stack.length > 0
+                    ? stack.map((s) => s.node.name).join(", ")
+                    : "-",
+              });
+            }
+          }
+        }
+
+        renderOutput(method, tableData, treeNodes, goalNode, iterasi);
+      }
+
+      function renderOutput(method, tableData, treeNodes, goalNode, iterasi) {
+        document.getElementById("conclusion").innerHTML = `
+            <strong>Kesimpulan:</strong> Pencarian selesai dengan metode <strong>${method}</strong> 
+            dalam <strong>${iterasi} Langkah Pelacakan Memori</strong>. Total *State* yang diimajinasikan di *Tree*: <strong>${treeNodes.length}</strong>.
+            <br><span style="font-size: 0.9em; color: #475569;">Pada metode DFS, mesin menggunakan teknik Runut Balik (Backtracking) murni, yang melahirkan cabang satu per satu secara runut ke bawah.</span>
+        `;
+
+        let tbody = document.getElementById("queue-tbody");
+        tbody.innerHTML = "";
+        tableData.forEach((row) => {
+          tbody.innerHTML += `<tr><td>${row.pop}</td><td>${row.push}</td><td>${row.queue}</td></tr>`;
+        });
+
+        document.getElementById("tree-container").innerHTML = buildTreeHTML(
+          treeNodes,
+          null,
+          goalNode ? goalNode.id : -1,
+        );
+
+        setTimeout(() => {
+          fitTreeToScreen(false);
+        }, 100);
+      }
+
+      function buildTreeHTML(nodes, parentId, goalId) {
+        let children = nodes.filter((n) => n.parentId === parentId);
+        if (children.length === 0) return "";
+
+        let html = "<ul>";
+        children.forEach((node) => {
+          let isGoal = node.id === goalId ? "goal-node" : "";
+          let opHtml = node.opLabel
+            ? `<div class="edge-label">${node.opLabel}</div>`
+            : "";
+
+          html += `
+                <li class="node-level-${node.level}">
+                    ${opHtml}
+                    <div class="node-box ${isGoal}">
+                        <div class="circle">${node.name}</div>
+                        <div class="state-label">${node.state.join(",")}</div>
+                        <div class="level-badge">Level ${node.level}</div>
+                    </div>
+                    ${buildTreeHTML(nodes, node.id, goalId)}
+                </li>
+            `;
+        });
+        html += "</ul>";
+        return html;
+      }
+
+      function fitTreeToScreen(isPrint = false) {
+        let scaleContainer = document.getElementById("tree-scale-container");
+        if (!isPrint) {
+          scaleContainer.style.transform = "scale(1)";
+          return;
+        }
+        let wrapperWidth = 1050;
+        let treeWidth = scaleContainer.scrollWidth;
+        if (treeWidth > wrapperWidth) {
+          let scaleRatio = wrapperWidth / treeWidth;
+          scaleContainer.style.transform = `scale(${scaleRatio - 0.02})`;
+        }
+      }
+
+      window.addEventListener("beforeprint", () => fitTreeToScreen(true));
+      window.addEventListener("afterprint", () => fitTreeToScreen(false));
+    </script>
+  </body>
+</html>
