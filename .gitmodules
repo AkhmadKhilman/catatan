@@ -1,0 +1,21 @@
+[submodule "5-aplikasi-mobile/latihan-dasar-flutter-1"]
+	path = 5-aplikasi-mobile/latihan-dasar-flutter-1
+	url = https://github.com/AkhmadKhilman/latihan-dasar-flutter-1.git
+[submodule "5-aplikasi-mobile/latihan-dasar-flutter-2"]
+	path = 5-aplikasi-mobile/latihan-dasar-flutter-2
+	url = https://github.com/AkhmadKhilman/latihan-dasar-flutter-2.git
+[submodule "5-aplikasi-mobile/latihan-dasar-flutter-3"]
+	path = 5-aplikasi-mobile/latihan-dasar-flutter-3
+	url = https://github.com/AkhmadKhilman/latihan-dasar-flutter-3.git
+[submodule "5-aplikasi-mobile/latihan-praktikum-flutter-1"]
+	path = 5-aplikasi-mobile/latihan-praktikum-flutter-1
+	url = https://github.com/AkhmadKhilman/latihan-praktikum-flutter-1.git
+[submodule "5-aplikasi-mobile/latihan-praktikum-flutter-2"]
+	path = 5-aplikasi-mobile/latihan-praktikum-flutter-2
+	url = https://github.com/AkhmadKhilman/latihan-praktikum-flutter-2.git
+[submodule "5-aplikasi-mobile/latihan-dasa-dart"]
+	path = 5-aplikasi-mobile/latihan-dasa-dart
+	url = https://github.com/AkhmadKhilman/latihan-dasar-dart.git
+[submodule "5-aplikasi-mobile/latihan-dasar-dart"]
+	path = 5-aplikasi-mobile/latihan-dasar-dart
+	url = https://github.com/AkhmadKhilman/latihan-dasar-dart.git
